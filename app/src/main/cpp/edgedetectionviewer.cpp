@@ -2,9 +2,10 @@
 #include <android/log.h>
 
 // OpenCV core headers
-#include "include/opencv2/opencv.hpp"
-#include "include/opencv2/core.hpp"
-#include <imgproc.hpp>
+#include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/imgproc.hpp>
+
 
 #define LOG_TAG "NativeFrame"
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
