@@ -12,7 +12,6 @@ public class MainActivity extends AppCompatActivity {
     static {
         System.loadLibrary("edgedetectionviewer");
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
