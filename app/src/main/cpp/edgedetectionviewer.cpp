@@ -19,13 +19,11 @@ Java_com_example_edgedetectionviewer_MainActivity_processFrame(
 
     // Convert Java byte[] to C++ pointer
     jbyte *data = env->GetByteArrayElements(frameData, nullptr);
-    jsize length = env->GetArrayLength(frameData);
 
-    // Y-plane from YUV -> grayscale Mat
+    // Y-plane from YUV camera frame -> grayscale Mat
     unsigned char* yPlane = reinterpret_cast<unsigned char*>(data);
     cv::Mat gray(height, width, CV_8UC1, yPlane);
 
-    // Log grayscale status
     LOGI("Gray Mat: %dx%d channels=%d", gray.cols, gray.rows, gray.channels());
 
     // --- STEP 2: Canny Edge Detection ---
@@ -34,7 +32,28 @@ Java_com_example_edgedetectionviewer_MainActivity_processFrame(
 
     LOGI("Edges Mat created: %dx%d", edges.cols, edges.rows);
 
-    // TODO: Later we will send 'edges' back to Java for display
+    // --- STEP 3: Send processed edges back to Java ---
+    int size = width * height;     // 1 byte per pixel (grayscale)
+    jbyteArray edgeArray = env->NewByteArray(size);
 
+    env->SetByteArrayRegion(
+            edgeArray, 0, size,
+            reinterpret_cast<jbyte*>(edges.data)
+    );
+
+    // Get Java class
+    jclass cls = env->GetObjectClass(thiz);
+
+    // Find callback method
+    jmethodID methodID = env->GetMethodID(
+            cls,
+            "onFrameProcessed",
+            "([BII)V"
+    );
+
+    // Call Java method
+    env->CallVoidMethod(thiz, methodID, edgeArray, width, height);
+
+    // Cleanup
     env->ReleaseByteArrayElements(frameData, data, JNI_ABORT);
 }
