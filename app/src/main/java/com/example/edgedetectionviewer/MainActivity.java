@@ -9,6 +9,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
+    static {
+        System.loadLibrary("edgedetectionviewer");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
