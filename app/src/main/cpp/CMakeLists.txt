@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.22.1)
 project("edgedetectionviewer")
 
 # OpenCV include path
-include_directories(${CMAKE_CURRENT_LIST_DIR}/include.opencv2)
+include_directories(${CMAKE_CURRENT_LIST_DIR}/include/opencv2)
+
 
 # Import OpenCV shared library
 add_library(opencv_java4 SHARED IMPORTED)
