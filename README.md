@@ -24,6 +24,7 @@ This project contains:
 - [Android App Setup](#android-app-setup)
 - [Web App Setup](#web-app-setup)
 - [Screenshots](#screenshots)
+- [Architecture Overview](#Architecture-Overview)
 
 ---
 
@@ -73,12 +74,6 @@ This project contains:
 
 # 📱 Android App Setup
 
-## ✅ Requirements
-- Android Studio (latest)
-- Android NDK + CMake installed
-- USB debugging enabled
-- OpenCV headers placed in `cpp/include.opencv2`
-
 ## 🚀 Steps to Run
 
 ### 1. Clone the repository
@@ -92,14 +87,88 @@ cd EdgeDetectionViewer
 
 The IDE will sync Gradle + configure CMake automatically.
 
-### 3. Connect an Android device
+---
+
+### 3. Install Android SDK Build-Tools, NDK (Side by side) and CMake
+
+Open:
+
+**Android Studio → Settings → SDK Manager → SDK Tools**
+
+Enable:
+* **Android SDK Build-Tools
+* **NDK (Side by side)**
+* **CMake**
+
+---
+
+### 4. Add OpenCV Headers (Optional)
+
+
+👉 **Note:** Headers already included, you do **not** need to download OpenCV.
+**You can skip this step.**
+
+---
+
+If you are interested in understanding the OpenCV setup, you may follow the detailed instructions below.
+
+1. Download OpenCV Android SDK from:
+   [https://opencv.org/releases/](https://opencv.org/releases/)
+
+2. Extract it and copy:
+
+```
+OpenCV-android-sdk/sdk/native/jni/include/opencv2/
+```
+
+3. Paste the folder into your project at:
+
+```
+app/src/main/cpp/include.opencv2/opencv2/
+```
+
+The `CMakeLists.txt` is already configured to include this directory.
+No further linking is required.
+
+---
+
+### 5. CMake Configuration
+
+CMake automatically builds the native library when you press **Run ▶**.
+
+The file:
+
+```
+app/src/main/cpp/CMakeLists.txt
+```
+
+is already set up with:
+
+* JNI bindings
+* OpenCV include paths
+* Shared library output
+
+Nothing extra needs to be changed.
+
+---
+
+### 6. Device Requirements
+
+The Android app uses:
+
+* **Camera2 API**
+* **YUV_420_888 frames**
+
+This requires a **physical device**.
 
 Enable:
 
 * Developer options
 * USB debugging
 
-### 4. Press **Run ▶**
+---
+
+### 7. Press **Run ▶**
 
 Android Studio will build the C++ code, install the APK, and launch the application.
 
@@ -177,21 +246,34 @@ This works **only if**:
 
 ---
 
-### Android:
+# 🧩 Architecture Overview
 
-* Camera2 frame capture
-* Correct Y-plane extraction
-* JNI bridge
-* OpenCV Canny
-* Frame rotation fix
-* OpenGL ES textured quad renderer
-* Real-time output
+## 📱 Android (Camera → JNI → OpenCV → OpenGL)
 
-### Web:
+* Camera2 provides **YUV_420_888** frames.
+* Java extracts the **Y-plane** and sends it to C++ using **JNI**.
+* C++ uses **OpenCV** to run **Canny edge detection**.
+* The processed edge buffer is returned to Java via JNI.
+* A minimal **OpenGL ES 2.0 renderer** draws the result as a full-screen textured quad.
 
-* Independent PNG viewer
-* Clean and minimal implementation
+**Flow:**
+`Camera → Y-plane → JNI → OpenCV (C++) → JNI → OpenGL → Screen`
+
 ---
+
+## 🌐 Web (HTML + TypeScript)
+
+* User selects a PNG file in the browser.
+* **TypeScript** uses `FileReader` to load the image.
+* The PNG is drawn onto an HTML **canvas** (2D context).
+* Fully static — no backend required.
+
+**Flow:**
+`PNG Input → TypeScript → Canvas API → Screen`
+
+
+---
+
 
 
 
