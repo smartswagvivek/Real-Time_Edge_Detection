@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -13,7 +14,7 @@ const canvas = document.getElementById("canvasOutput");
 const loader = document.getElementById("loader");
 const ctx = canvas.getContext("2d");
 // Handle PNG upload
-fileInput.addEventListener("change", () => __awaiter(this, void 0, void 0, function* () {
+fileInput.addEventListener("change", () => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const file = (_a = fileInput.files) === null || _a === void 0 ? void 0 : _a[0];
     if (!file)
