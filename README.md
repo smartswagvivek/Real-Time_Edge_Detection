@@ -79,8 +79,8 @@ This project contains:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/samarthby/android-opencv-opengl
-cd EdgeDetectionViewer
+git clone https://github.com/smartswagvivek/Real-Time_Edge_Detection.git
+cd Real-Time_Edge_Detection
 ```
 
 ### 2. Open project in Android Studio
